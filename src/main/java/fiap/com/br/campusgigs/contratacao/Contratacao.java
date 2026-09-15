@@ -20,6 +20,9 @@ public class Contratacao {
 
     @OneToOne
     private Servico servico;
+
     @OneToOne
     private Usuario usuario;
+
+    private Situacao situacao;
 }
