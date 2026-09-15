@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
-    private final UsuarioRepository usarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = usarioRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("User not found with username: " + username)
+    public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
+        var user = usuarioRepository.findByNome(nome).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with name: " + nome)
         );
 
         return User

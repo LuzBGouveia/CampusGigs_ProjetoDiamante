@@ -13,7 +13,7 @@ public class AuthController {
         this.tokenService = tokenService;
     }
 
-    record LoginRequest(String username, String password) {}
+    record LoginRequest(String nome, String password) {}
     record LoginResponse(String token) {}
 
     @PostMapping("login")
