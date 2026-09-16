@@ -13,16 +13,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/contratacao")
 public class ContratacaoController {
-    private final ContratacaoRepository repository;
+    private final ContratacaoService service;
 
     @GetMapping
     public List<Contratacao> findAll() {
-        return repository.findAll();
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Contratacao> findById(@PathVariable Long id) {
-        return ResponseEntity.of(repository.findById(id));
+        return ResponseEntity.of(service.findById(id));
     }
 
 }
