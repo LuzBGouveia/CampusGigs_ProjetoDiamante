@@ -18,10 +18,10 @@ public class Contratacao {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "servico", cascade = CascadeType.ALL, orphanRemoval = true)
     private Servico servico;
 
-    @OneToOne
+    @OneToOne(mappedBy = "servico", cascade = CascadeType.ALL, orphanRemoval = true)
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
