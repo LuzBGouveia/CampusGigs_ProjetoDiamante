@@ -50,10 +50,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsManager users(){
-        UserDetails joao = User.withUsername("joao").password("{noop}123456").build();
-        UserDetails maria = User.withUsername("maria").password("{noop}123456").build();
-        return new InMemoryUserDetailsManager(joao, maria);
+    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

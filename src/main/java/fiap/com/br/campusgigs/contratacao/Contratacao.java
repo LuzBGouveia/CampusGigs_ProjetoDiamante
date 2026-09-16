@@ -24,5 +24,6 @@ public class Contratacao {
     @OneToOne
     private Usuario usuario;
 
+    @Enumerated(EnumType.STRING)
     private Situacao situacao;
 }

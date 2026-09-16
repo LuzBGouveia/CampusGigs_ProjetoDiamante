@@ -2,6 +2,7 @@ package fiap.com.br.campusgigs.auth;
 
 import fiap.com.br.campusgigs.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
@@ -16,12 +18,12 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
         var user = usuarioRepository.findByNome(nome).orElseThrow(
-                () -> new UsernameNotFoundException("User not found with name: " + nome)
+                () ->    new UsernameNotFoundException("User not found with name: " + nome)
         );
 
         return User
                 .withUsername(user.getNome())
-                .password(user.getNome())
+                .password(user.getSenha())
                 .roles(user.getRole())
                 .build();
     }

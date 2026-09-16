@@ -17,9 +17,9 @@ public class TokenService {
     private final JwtEncoder jwtEncoder;
     private final UsuarioRepository usuarioRepository;
 
-    String generateToken(String email){
-        var user = usuarioRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
+    String generateToken(String nome){
+        var user = usuarioRepository.findByNomeIgnoreCase(nome)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + nome));
 
         Instant now = Instant.now();
         JwtClaimsSet param = JwtClaimsSet.builder()

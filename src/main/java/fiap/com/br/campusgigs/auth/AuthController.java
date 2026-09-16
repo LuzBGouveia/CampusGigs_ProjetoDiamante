@@ -13,10 +13,10 @@ public class AuthController {
         this.tokenService = tokenService;
     }
 
-    record LoginRequest(String nome, String password) {}
+    record LoginRequest(String nome, String senha) {}
     record LoginResponse(String token) {}
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public LoginResponse login(Authentication authentication){
         var jwt = tokenService.generateToken(authentication.getName());
         return new LoginResponse(jwt);

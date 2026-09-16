@@ -25,5 +25,6 @@ public class Servico {
     @ManyToOne
     private Usuario usuario;
 
+    @Enumerated(EnumType.STRING)
     private Situacao situacao;
 }
