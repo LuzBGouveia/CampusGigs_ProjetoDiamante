@@ -5,10 +5,10 @@ import fiap.com.br.campusgigs.servico.ServicoService;
 import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

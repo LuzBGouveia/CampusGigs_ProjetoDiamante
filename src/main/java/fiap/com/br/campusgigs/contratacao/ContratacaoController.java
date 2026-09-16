@@ -4,6 +4,7 @@ import fiap.com.br.campusgigs.contratacao.Contratacao;
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class ContratacaoController {
     }
 
     @PostMapping
-    public Contratacao add(@RequestBody ContratacaoRequest request) {
-        return service.save(request);
+    public Contratacao add(@RequestBody ContratacaoRequest request, Authentication authentication) {
+        return service.save(request, authentication);
     }
 
     @DeleteMapping("/{id}")
