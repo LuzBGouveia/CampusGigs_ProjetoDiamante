@@ -5,7 +5,10 @@ import fiap.com.br.campusgigs.servico.ServicoService;
 import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +30,14 @@ public class ServicoController {
     }
 
     @PostMapping
-    public Servico add(@RequestBody ServicoRequest request) {
-        return service.save(request);
+    public Servico add(@RequestBody ServicoRequest request, Authentication authentication) {
+        return service.save(request, authentication);
     }
 
     @DeleteMapping("/{id}")
-    public void  delete(@PathVariable Long id) {
-        service.delete(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public void  delete(@PathVariable Long id, Authentication authentication) {
+        service.delete(id, authentication);
     }
 }
