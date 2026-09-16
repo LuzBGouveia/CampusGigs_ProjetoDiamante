@@ -6,14 +6,20 @@ public record UsuarioResponse (
         String nome,
         String email,
         String senha,
-        String role
+        String role,
+        String cep,
+        String cidade,
+        String uf
 ) {
     public static UsuarioResponse fromEntity(Usuario usuario) {
         return new UsuarioResponse(
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getSenha(),
-                usuario.getRole()
+                usuario.getRole(),
+                usuario.getCep(),
+                usuario.getCidade(),
+                usuario.getUf()
         );
     }
 }

@@ -6,7 +6,8 @@ public record UsuarioRequest (
         String nome,
         String email,
         String senha,
-        String role
+        String role,
+        String cep
 ) {
     public Usuario toEntity() {
         return Usuario.builder()

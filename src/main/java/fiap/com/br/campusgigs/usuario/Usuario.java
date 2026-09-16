@@ -18,8 +18,12 @@ public class Usuario {
     private String nome;
     private String senha;
     private String email;
+    private String cep;
+    private String cidade;
+    private String uf;
 
     @Pattern(regexp = "USER|ADMIN", message = "Role must be either USER or ADMIN")
     private String role;
+
 
 }
