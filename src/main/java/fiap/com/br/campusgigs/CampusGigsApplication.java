@@ -9,9 +9,7 @@ import org.springframework.web.service.registry.ImportHttpServices;
 @ImportHttpServices()
 @ConfigurationPropertiesScan
 public class CampusGigsApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(CampusGigsApplication.class, args);
     }
-
 }
