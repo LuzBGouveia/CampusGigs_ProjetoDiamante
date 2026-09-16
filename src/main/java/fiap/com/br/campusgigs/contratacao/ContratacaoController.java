@@ -1,11 +1,10 @@
 package fiap.com.br.campusgigs.contratacao;
 
+import fiap.com.br.campusgigs.contratacao.Contratacao;
+import fiap.com.br.campusgigs.contratacao.dto.ContratacaoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +20,18 @@ public class ContratacaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Contratacao> findById(@PathVariable Long id) {
-        return ResponseEntity.of(service.findById(id));
+    public Contratacao findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public Contratacao add(@RequestBody ContratacaoRequest request) {
+        return service.save(request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void  delete(@PathVariable Long id) {
+        service.delete(id);
     }
 
 }
