@@ -2,12 +2,11 @@ package fiap.com.br.campusgigs.servico;
 
 import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.ServicoService;
+import fiap.com.br.campusgigs.servico.Servico;
+import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +22,17 @@ public class ServicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Servico> findById(@PathVariable Long id) {
-        return ResponseEntity.of(service.findById(id));
+    public Servico findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public Servico add(@RequestBody ServicoRequest request) {
+        return service.save(request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void  delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }
