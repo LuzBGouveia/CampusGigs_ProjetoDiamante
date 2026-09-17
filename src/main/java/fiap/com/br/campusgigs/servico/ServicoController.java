@@ -13,7 +13,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/servico")
+@RequestMapping("/campusgigs/servico")
 public class ServicoController {
     private final ServicoService service;
 
