@@ -1,21 +1,22 @@
 package fiap.com.br.campusgigs.usuario.dto;
 
 import fiap.com.br.campusgigs.usuario.Usuario;
+import fiap.com.br.campusgigs.usuario.UsuarioRole;
 
 public record UsuarioResponse (
+        Long id,
         String nome,
         String email,
-        String senha,
-        String role,
+        UsuarioRole role,
         String cep,
         String cidade,
         String uf
 ) {
     public static UsuarioResponse fromEntity(Usuario usuario) {
         return new UsuarioResponse(
+                usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSenha(),
                 usuario.getRole(),
                 usuario.getCep(),
                 usuario.getCidade(),

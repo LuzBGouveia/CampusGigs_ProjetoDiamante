@@ -1,6 +1,6 @@
 package fiap.com.br.campusgigs.contratacao;
 
-public enum Situacao {
+public enum SituacaoContratacao {
     SOLICITADA,
     ACEITA,
     CONCLUIDA,

@@ -1,6 +1,6 @@
 package fiap.com.br.campusgigs.servico;
 
-public enum Situacao {
+public enum SituacaoServico {
     ATIVO,
     PAUSADO,
     ENCERRADO

@@ -1,8 +1,11 @@
 package fiap.com.br.campusgigs.contratacao;
 
-import fiap.com.br.campusgigs.contratacao.Contratacao;
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoRequest;
+import fiap.com.br.campusgigs.contratacao.dto.ContratacaoResponse;
+import fiap.com.br.campusgigs.validations.ContratacaoValidator;
+import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.ServicoRepository;
+import fiap.com.br.campusgigs.usuario.Usuario;
 import fiap.com.br.campusgigs.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,38 +21,48 @@ public class ContratacaoService {
     private final ContratacaoRepository repository;
     private final UsuarioRepository usuarioRepository;
     private final ServicoRepository servicoRepository;
+    private final ContratacaoValidator validator;
 
-    public List<Contratacao> findAll() {
-        return repository.findAll();
+    public List<ContratacaoResponse> findAll() {
+        return repository.findAll().stream()
+                .map(ContratacaoResponse::fromEntity)
+                .toList();
     }
 
-    public Contratacao findById(Long id) {
-        return repository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contratação não encontrado.")
-        );
+    public ContratacaoResponse findById(Long id) {
+        return ContratacaoResponse.fromEntity(findContratacaoById(id));
     }
 
-    public Contratacao save(ContratacaoRequest request, Authentication authentication) {
-        var servico = servicoRepository.findById(request.servico().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado."));
+    public ContratacaoResponse save(ContratacaoRequest request, Authentication authentication) {
+        var servico = findServicoById(request.servicoId());
+        var usuarioLogado = findUsuarioByEmail(authentication.getName());
 
-        var usuarioLogado = usuarioRepository.findByNome(authentication.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário logado não encontrado."));
+        validator.validate(servico, usuarioLogado);
 
-        if (servico.getUsuario().getId().equals(usuarioLogado.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Você não pode contratar o seu próprio serviço.");
-        }
-
-        var contratacao = new Contratacao();
-        contratacao.setServico(servico);
-        contratacao.setUsuario(usuarioLogado);
-        contratacao.setSituacao(Situacao.SOLICITADA); // Ou o status inicial padrão
-
-        return repository.save(contratacao);
+        var contratacao = new Contratacao(servico, usuarioLogado);
+        return ContratacaoResponse.fromEntity(repository.save(contratacao));
     }
 
     public void delete(Long id) {
-        findById(id);
-        repository.deleteById(id);
+        var contratacao = findContratacaoById(id);
+        repository.delete(contratacao);
+    }
+
+    private Contratacao findContratacaoById(Long id) {
+        return repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contratação não encontrada.")
+        );
+    }
+
+    private Servico findServicoById(Long id) {
+        return servicoRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado.")
+        );
+    }
+
+    private Usuario findUsuarioByEmail(String email) {
+        return usuarioRepository.findByEmailIgnoreCase(email).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário autenticado não encontrado.")
+        );
     }
 }

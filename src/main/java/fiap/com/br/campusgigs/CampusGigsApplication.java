@@ -4,9 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.web.service.registry.ImportHttpServices;
+import fiap.com.br.campusgigs.endereco.EnderecoService;
 
 @SpringBootApplication
-@ImportHttpServices()
+@ImportHttpServices(EnderecoService.class)
 @ConfigurationPropertiesScan
 public class CampusGigsApplication {
     public static void main(String[] args) {

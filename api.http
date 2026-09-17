@@ -1,12 +1,213 @@
-### GET list all contratacao
-GET http://localhost:8080/contratacao
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjYW1wdXNnaWdzLWFwaSIsInJvbGUiOiJVU0VSIiwiZXhwIjoxNzg5NTk2Njk3LCJpYXQiOjE3ODk1OTYwOTd9.O_o6515H57yNBZU5kntKpQPs-11Pzln1fqQMeDDslCPaFZKzaNNyXc3BuG3M6WYl87lMyFJ_8I6owx4GQ1EWJ8yVs8jdbnnwPZkuQc1m5GHcFveYTQN_n7MLS1t5cDxariTAUJXnxONZRwYvIKwcJD1tkqZJrDmm1wyo5bxbuKzaOmARaa9fOwxLRCDvOukAniaWBkN1u7p2BvGuso-HY-ZXSSq2rZsKTbqT7RGQmUXa9OjblFDYmr8W822KfYG5kEB57tDlON1TdguT3z0lW39VOQKnlFldAlOvV4P2V5u0DETvkvwg_TTONmfIiyV5znT_sXPn6wEIWz0uqAbUkg
+### ==============================================================================
+### CAMPUSGIGS - ROTEIRO DE TESTES DOS CHECKPOINTS (PROJETO DIAMANTE - FIAP)
+### ==============================================================================
 
-### GET list all usuario
-GET http://localhost:8080/usuario
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjYW1wdXNnaWdzLWFwaSIsInJvbGUiOiJVU0VSIiwiZXhwIjoxNzg5NTk2Njk3LCJpYXQiOjE3ODk1OTYwOTd9.O_o6515H57yNBZU5kntKpQPs-11Pzln1fqQMeDDslCPaFZKzaNNyXc3BuG3M6WYl87lMyFJ_8I6owx4GQ1EWJ8yVs8jdbnnwPZkuQc1m5GHcFveYTQN_n7MLS1t5cDxariTAUJXnxONZRwYvIKwcJD1tkqZJrDmm1wyo5bxbuKzaOmARaa9fOwxLRCDvOukAniaWBkN1u7p2BvGuso-HY-ZXSSq2rZsKTbqT7RGQmUXa9OjblFDYmr8W822KfYG5kEB57tDlON1TdguT3z0lW39VOQKnlFldAlOvV4P2V5u0DETvkvwg_TTONmfIiyV5znT_sXPn6wEIWz0uqAbUkg
+@baseUrl = http://localhost:8080
 
-### GET list all servico
-GET http://localhost:8080/servico
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjYW1wdXNnaWdzLWFwaSIsInJvbGUiOiJVU0VSIiwiZXhwIjoxNzg5NTk2Njk3LCJpYXQiOjE3ODk1OTYwOTd9.O_o6515H57yNBZU5kntKpQPs-11Pzln1fqQMeDDslCPaFZKzaNNyXc3BuG3M6WYl87lMyFJ_8I6owx4GQ1EWJ8yVs8jdbnnwPZkuQc1m5GHcFveYTQN_n7MLS1t5cDxariTAUJXnxONZRwYvIKwcJD1tkqZJrDmm1wyo5bxbuKzaOmARaa9fOwxLRCDvOukAniaWBkN1u7p2BvGuso-HY-ZXSSq2rZsKTbqT7RGQmUXa9OjblFDYmr8W822KfYG5kEB57tDlON1TdguT3z0lW39VOQKnlFldAlOvV4P2V5u0DETvkvwg_TTONmfIiyV5znT_sXPn6wEIWz0uqAbUkg
+### ------------------------------------------------------------------------------
+### 1. CADASTRO DE NOVO USUÁRIO COM VIA CEP (HttpExchange declarativo - CP2 & CP5)
+### Consulta automática de cidade e UF via CEP 01310-100 (Avenida Paulista)
+### ------------------------------------------------------------------------------
+# @name cadastrarUsuarioValido
+POST {{baseUrl}}/usuario
+Content-Type: application/json
 
+{
+  "nome": "Lucas Ferreira",
+  "email": "lucas.ferreira@email.com",
+  "senha": "senhaSegura123",
+  "cep": "01310-100"
+}
+
+### ------------------------------------------------------------------------------
+### 2. TENTATIVA DE CADASTRO COM CEP INEXISTENTE (ViaCEP retorna { "erro": "true" })
+### Deve responder com 400 Bad Request no formato RFC 7807 (ProblemDetail)
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/usuario
+Content-Type: application/json
+
+{
+  "nome": "Aluno Teste Inexistente",
+  "email": "aluno.inexistente@email.com",
+  "senha": "senhaSegura123",
+  "cep": "07749-180"
+}
+
+### ------------------------------------------------------------------------------
+### 2.1 TENTATIVA DE CADASTRO COM CEP DE FORMATO INVÁLIDO (ViaCEP retorna HTTP 400)
+### Capturado pelo GlobalExceptionHandler retornando ProblemDetail amigável
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/usuario
+Content-Type: application/json
+
+{
+  "nome": "Aluno Formato Invalido",
+  "email": "aluno.formato@email.com",
+  "senha": "senhaSegura123",
+  "cep": "01111"
+}
+
+### ------------------------------------------------------------------------------
+### 2.2 TENTATIVA DE CADASTRO COM E-MAIL DUPLICADO (Constraint UNIQUE do Banco)
+### Capturado pelo GlobalExceptionHandler (DataIntegrityViolationException) -> 409 Conflict
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/usuario
+Content-Type: application/json
+
+{
+  "nome": "Lucas Clonado",
+  "email": "lucas.ferreira@email.com",
+  "senha": "outraSenha123",
+  "cep": "01310-100"
+}
+
+### ------------------------------------------------------------------------------
+### 3. AUTENTICAÇÃO / LOGIN DO USUÁRIO CRIADO (JWT + BCrypt - CP2 & CP3)
+### ------------------------------------------------------------------------------
+# @name loginUsuario
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "lucas.ferreira@email.com",
+  "senha": "senhaSegura123"
+}
+
+### Armazenar Token do Usuário
+@tokenUsuario = {{loginUsuario.response.body.token}}
+
+### ------------------------------------------------------------------------------
+### 4. LOGIN COM USUÁRIO ADMIN SEED (admin@campusgigs.com / admin123)
+### ------------------------------------------------------------------------------
+# @name loginAdmin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "admin@campusgigs.com",
+  "senha": "admin123"
+}
+
+### Armazenar Token do Administrador
+@tokenAdmin = {{loginAdmin.response.body.token}}
+
+### ------------------------------------------------------------------------------
+### 5. LISTAGEM PÚBLICA DE SERVIÇOS (Catálogo acessível sem token - CP4)
+### ------------------------------------------------------------------------------
+GET {{baseUrl}}/servico
+
+### ------------------------------------------------------------------------------
+### 6. PUBLICAR NOVO SERVIÇO (FREELA) COM USUÁRIO AUTENTICADO (CP3 & CP4)
+### ------------------------------------------------------------------------------
+# @name criarServico
+POST {{baseUrl}}/servico
+Content-Type: application/json
+Authorization: Bearer {{tokenUsuario}}
+
+{
+  "titulo": "Monitoria de Java e Spring Boot",
+  "descricao": "Aulas práticas de Spring Boot, JPA, Flyway e Docker para alunos da FIAP.",
+  "categoria": "Educacao",
+  "preco": 90.00
+}
+
+### ------------------------------------------------------------------------------
+### 6.1 EDITAR SERVIÇO PRÓPRIO (PUT /servico/{id}) (Slide 6)
+### O prestador atualiza título, descrição ou valor do seu freela
+### ------------------------------------------------------------------------------
+PUT {{baseUrl}}/servico/9
+Content-Type: application/json
+Authorization: Bearer {{tokenUsuario}}
+
+{
+  "titulo": "Monitoria Avançada de Java, Spring Boot e Docker",
+  "descricao": "Aulas completas com foco no Projeto Diamante da FIAP.",
+  "categoria": "Educacao",
+  "preco": 120.00
+}
+
+### ------------------------------------------------------------------------------
+# @name loginContratante
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "enzo@email.com",
+  "senha": "123456"
+}
+
+@tokenContratante = {{loginContratante.response.body.token}}
+
+### ------------------------------------------------------------------------------
+### 8. CONTRATAR SERVIÇO ATIVO (CP4)
+### Outro aluno autenticado contrata o serviço 1 (Desenvolvimento de site)
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/contratacao
+Content-Type: application/json
+Authorization: Bearer {{tokenContratante}}
+
+{
+  "servicoId": 6
+}
+
+### ------------------------------------------------------------------------------
+### 9. REGRA DE NEGÓCIO: NÃO CONTRATAR O PRÓPRIO SERVIÇO (CP4 - Slide 6 & 9)
+### Deve retornar 400 Bad Request ("Você não pode contratar o seu próprio serviço")
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/contratacao
+Content-Type: application/json
+Authorization: Bearer {{tokenUsuario}}
+
+{
+  "servicoId": 9
+}
+
+### ------------------------------------------------------------------------------
+### 10. REGRA DE NEGÓCIO: NÃO CONTRATAR SERVIÇO JÁ CONTRATADO (CP4)
+### Deve retornar 400 Bad Request ("Este serviço já possui uma contratação registrada")
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/contratacao
+Content-Type: application/json
+Authorization: Bearer {{tokenContratante}}
+
+{
+  "servicoId": 1
+}
+
+### ------------------------------------------------------------------------------
+### 11. ENCERRAMENTO DE SERVIÇO (PATCH /servico/{id}/encerrar) (CP4 - Slide 4 & 6)
+### O próprio dono do serviço encerra seu serviço
+### ------------------------------------------------------------------------------
+PATCH {{baseUrl}}/servico/1/encerrar
+Authorization: Bearer {{tokenContratante}}
+
+### ------------------------------------------------------------------------------
+### 12. REGRA DE NEGÓCIO: TENTAR CONTRATAR SERVIÇO NÃO ATIVO / ENCERRADO (CP4 - Slide 9)
+### Deve retornar 400 Bad Request ("Tentativa de contratar um serviço que não está ativo")
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/contratacao
+Content-Type: application/json
+Authorization: Bearer {{tokenUsuario}}
+
+{
+  "servicoId": 1
+}
+
+### ------------------------------------------------------------------------------
+### 13. EVIDÊNCIA DE TESTE DE ACESSO NEGADO POR PAPEL (CP4 / Entrega Slide 11)
+### Usuário comum tenta excluir o serviço de outro aluno (retorna 403 Forbidden)
+### ------------------------------------------------------------------------------
+DELETE {{baseUrl}}/servico/2
+Authorization: Bearer {{tokenUsuario}}
+
+### ------------------------------------------------------------------------------
+### 14. ADMIN ENCERRA QUALQUER SERVIÇO (Permissão de ADMIN - Slide 6)
+### ------------------------------------------------------------------------------
+PATCH {{baseUrl}}/servico/2/encerrar
+Authorization: Bearer {{tokenAdmin}}
+
+### ------------------------------------------------------------------------------
+### 15. ADMIN EXCLUI SERVIÇO (Permissão de ADMIN - Slide 6)
+### ------------------------------------------------------------------------------
+DELETE {{baseUrl}}/servico/8
+Authorization: Bearer {{tokenAdmin}}

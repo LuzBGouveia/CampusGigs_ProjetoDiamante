@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record EnderecoResponse(
-        String logradouro,
-        String bairro,
         String localidade,
-        String estado,
+        String uf,
         Boolean erro
 ) {
 }

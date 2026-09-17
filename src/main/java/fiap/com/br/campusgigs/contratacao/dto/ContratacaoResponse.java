@@ -1,19 +1,21 @@
 package fiap.com.br.campusgigs.contratacao.dto;
 
 import fiap.com.br.campusgigs.contratacao.Contratacao;
-import fiap.com.br.campusgigs.servico.Servico;
-import fiap.com.br.campusgigs.contratacao.Situacao;
-import fiap.com.br.campusgigs.usuario.Usuario;
+import fiap.com.br.campusgigs.contratacao.SituacaoContratacao;
+import fiap.com.br.campusgigs.servico.dto.ServicoResponse;
+import fiap.com.br.campusgigs.usuario.dto.UsuarioResponse;
 
 public record ContratacaoResponse(
-        Servico servico,
-        Usuario usuario,
-        Situacao situacao
+        Long id,
+        ServicoResponse servico,
+        UsuarioResponse contratante,
+        SituacaoContratacao situacao
 ) {
     public static ContratacaoResponse fromEntity(Contratacao contratacao) {
         return new ContratacaoResponse(
-                contratacao.getServico(),
-                contratacao.getUsuario(),
+                contratacao.getId(),
+                ServicoResponse.fromEntity(contratacao.getServico()),
+                UsuarioResponse.fromEntity(contratacao.getUsuario()),
                 contratacao.getSituacao()
         );
     }

@@ -17,16 +17,16 @@ public class TokenService {
     private final JwtEncoder jwtEncoder;
     private final UsuarioRepository usuarioRepository;
 
-    String generateToken(String nome){
-        var user = usuarioRepository.findByNomeIgnoreCase(nome)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + nome));
+    String generateToken(String email){
+        var user = usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
         Instant now = Instant.now();
         JwtClaimsSet param = JwtClaimsSet.builder()
-                .subject("campusgigs-api")
+                .subject(user.getEmail())
                 .issuedAt(now)
-                .expiresAt(now.plus(10, ChronoUnit.MINUTES))
-                .claim("role", user.getRole())
+                .expiresAt(now.plus(2, ChronoUnit.HOURS))
+                .claim("role", user.getRole().name())
                 .build();
 
         JwtEncoderParameters jwtClaimsSet = JwtEncoderParameters.from(param);

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusGigs 💎 — Plataforma de Freelas Universitários</title>
+    <meta name="description" content="CampusGigs - Conectando estudantes para publicação e contratação de serviços acadêmicos e profissionais.">
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-glow top-left"></div>
+    <div class="background-glow bottom-right"></div>
+
+    <!-- Header / Navbar -->
+    <header class="app-header">
+        <div class="container header-content">
+            <div class="brand" id="brand-logo">
+                <span class="brand-icon">💎</span>
+                <div class="brand-text">
+                    <h1>CampusGigs</h1>
+                    <span class="badge-tag">FIAP Projeto Diamante</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <button class="nav-btn active" data-tab="explorar" id="tab-btn-explorar">Explorar Freelas</button>
+                <button class="nav-btn" data-tab="publicar" id="tab-btn-publicar">Publicar Freela</button>
+                <button class="nav-btn" data-tab="meus-servicos" id="tab-btn-meus-servicos">Minhas Atividades</button>
+            </nav>
+
+            <div class="user-session" id="user-session-container">
+                <div class="user-badge guest" id="session-badge">
+                    <span class="status-dot"></span>
+                    <span id="session-label">Visitante (Não logado)</span>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-open-auth">Entrar / Cadastrar</button>
+                <button class="btn btn-outline btn-sm hidden" id="btn-logout">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container main-content">
+        <!-- Toast Notification Area -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- TAB 1: EXPLORAR FREELAS -->
+        <section class="tab-panel active" id="panel-explorar">
+            <div class="section-hero">
+                <h2>Serviços Disponíveis no Campus</h2>
+                <p>Encontre os melhores freelas de desenvolvimento, design, aulas e tecnologia oferecidos por alunos.</p>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Buscar por título, tecnologia ou categoria...">
+                    <select id="filter-categoria">
+                        <option value="">Todas as categorias</option>
+                        <option value="Programacao">Programação</option>
+                        <option value="Design">Design</option>
+                        <option value="Educacao">Educação</option>
+                        <option value="Audiovisual">Audiovisual</option>
+                        <option value="Tecnologia">Tecnologia</option>
+                    </select>
+                    <button class="btn btn-primary" id="btn-reload-services">Atualizar</button>
+                </div>
+            </div>
+
+            <div class="services-grid" id="services-grid">
+                <!-- Cards renderizados via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: PUBLICAR FREELA -->
+        <section class="tab-panel" id="panel-publicar">
+            <div class="form-card glassmorphism">
+                <div class="card-header">
+                    <h2>Publicar Novo Freela</h2>
+                    <p>Divulgue seu talento para outros alunos da universidade.</p>
+                </div>
+                <form id="form-publicar-servico" class="styled-form">
+                    <div class="form-group">
+                        <label for="servico-titulo">Título do Freela</label>
+                        <input type="text" id="servico-titulo" placeholder="Ex: Criação de Landing Page em React" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="servico-categoria">Categoria</label>
+                            <select id="servico-categoria" required>
+                                <option value="">Selecione...</option>
+                                <option value="Programacao">Programação</option>
+                                <option value="Design">Design</option>
+                                <option value="Educacao">Educação</option>
+                                <option value="Audiovisual">Audiovisual</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="servico-preco">Preço (R$)</label>
+                            <input type="number" step="0.01" min="0" id="servico-preco" placeholder="150.00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servico-descricao">Descrição Completa</label>
+                        <textarea id="servico-descricao" rows="4" placeholder="Descreva os detalhes do serviço, ferramentas e prazos..." required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-block" id="btn-submit-servico">Publicar Serviço Agora</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: MINHAS ATIVIDADES -->
+        <section class="tab-panel" id="panel-meus-servicos">
+            <div class="activities-layout">
+                <div class="activities-col">
+                    <div class="col-header">
+                        <h3>Meus Freelas Publicados</h3>
+                        <span class="count-badge" id="count-meus-servicos">0</span>
+                    </div>
+                    <div class="items-list" id="list-meus-servicos">
+                        <!-- Renderizado via JS -->
+                    </div>
+                </div>
+
+                <div class="activities-col">
+                    <div class="col-header">
+                        <h3>Serviços que Contratei</h3>
+                        <span class="count-badge" id="count-minhas-contratacoes">0</span>
+                    </div>
+                    <div class="items-list" id="list-minhas-contratacoes">
+                        <!-- Renderizado via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL DE AUTENTICAÇÃO -->
+        <div class="modal-backdrop hidden" id="modal-auth">
+            <div class="modal-content glassmorphism">
+                <button class="modal-close" id="modal-auth-close">&times;</button>
+                
+                <div class="modal-tabs">
+                    <button class="modal-tab-btn active" id="tab-login-btn">Entrar</button>
+                    <button class="modal-tab-btn" id="tab-register-btn">Criar Conta</button>
+                </div>
+
+                <!-- Formulário de Login -->
+                <div id="subpanel-login" class="subpanel active">
+                    <form id="form-login" class="styled-form">
+                        <div class="form-group">
+                            <label for="login-email">E-mail</label>
+                            <input type="email" id="login-email" placeholder="seu.email@exemplo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-senha">Senha</label>
+                            <input type="password" id="login-senha" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="btn-do-login">Acessar Conta</button>
+
+                        <div class="quick-login-box">
+                            <span class="quick-title">Logins Rápidos de Teste (Seed):</span>
+                            <div class="quick-buttons">
+                                <button type="button" class="btn btn-outline btn-xs" id="quick-login-enzo">Aluno (Enzo)</button>
+                                <button type="button" class="btn btn-outline btn-xs" id="quick-login-admin">Administrador</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Formulário de Cadastro com ViaCEP -->
+                <div id="subpanel-register" class="subpanel">
+                    <form id="form-register" class="styled-form">
+                        <div class="form-group">
+                            <label for="reg-nome">Nome Completo</label>
+                            <input type="text" id="reg-nome" placeholder="Seu Nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-email">E-mail Universitário</label>
+                            <input type="email" id="reg-email" placeholder="aluno@email.com" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reg-senha">Senha</label>
+                                <input type="password" id="reg-senha" minlength="6" placeholder="Mínimo 6 chars" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-role">Papel</label>
+                                <select id="reg-role" required>
+                                    <option value="USER" selected>USER (Aluno)</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-cep">CEP (Consulta Automática ViaCEP)</label>
+                            <input type="text" id="reg-cep" placeholder="01310-100" maxlength="9" required>
+                            <small class="help-text" id="cep-feedback">Digite o CEP para buscar Cidade e UF automaticamente.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="btn-do-register">Cadastrar no CampusGigs</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container footer-content">
+            <p>© 2026 CampusGigs — FIAP Java Advanced (Spring Boot · JWT · Flyway · Docker · HttpExchange)</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package fiap.com.br.campusgigs.servico;
 
 import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
+import fiap.com.br.campusgigs.servico.dto.ServicoResponse;
+import fiap.com.br.campusgigs.usuario.Usuario;
 import fiap.com.br.campusgigs.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,44 +11,78 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ServicoService {
     private final ServicoRepository repository;
-    private final UsuarioRepository  usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public List<Servico> findAll() {
-        return repository.findAll();
+    public List<ServicoResponse> findAll() {
+        return repository.findAll().stream()
+                .map(ServicoResponse::fromEntity)
+                .toList();
     }
 
-    public Servico findById(Long id) {
+    public ServicoResponse findById(Long id) {
+        return ServicoResponse.fromEntity(findServicoById(id));
+    }
+
+    public ServicoResponse save(ServicoRequest request, Authentication authentication) {
+        var usuario = findUsuarioByEmail(authentication.getName());
+        var servico = request.toEntity(usuario);
+        return ServicoResponse.fromEntity(repository.save(servico));
+    }
+
+    public ServicoResponse update(Long id, ServicoRequest request, Authentication authentication) {
+        var servicoExistente = findServicoById(id);
+        validarPermissao(servicoExistente, authentication, "editar");
+
+        var servico = request.toEntity(servicoExistente.getUsuario());
+        servico.setId(id);
+        servico.setSituacao(servicoExistente.getSituacao());
+
+        return ServicoResponse.fromEntity(repository.save(servico));
+    }
+
+    public ServicoResponse encerrar(Long id, Authentication authentication) {
+        var servico = findServicoById(id);
+        validarPermissao(servico, authentication, "encerrar");
+
+        servico.setSituacao(SituacaoServico.ENCERRADO);
+        return ServicoResponse.fromEntity(repository.save(servico));
+    }
+
+    public void delete(Long id, Authentication authentication) {
+        var servico = findServicoById(id);
+        validarPermissao(servico, authentication, "excluir");
+
+        repository.delete(servico);
+    }
+
+    private Servico findServicoById(Long id) {
         return repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serviço não encontrado.")
         );
     }
 
-    public Servico save(ServicoRequest request, Authentication authentication) {
-        var usuario = usuarioRepository.findByNome(authentication.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário logado não encontrado."));
-
-        var servico = request.toEntity();
-        servico.setUsuario(usuario);
-
-        return repository.save(servico);
+    private Usuario findUsuarioByEmail(String email) {
+        return usuarioRepository.findByEmailIgnoreCase(email).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário autenticado não encontrado.")
+        );
     }
 
-    public void delete(Long id, Authentication authentication) {
-        var servico = findById(id);
-
+    private void validarPermissao(Servico servico, Authentication authentication, String acao) {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-        if (!isAdmin && !servico.getUsuario().getNome().equals(authentication.getName())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para excluir este serviço.");
-        }
+        boolean isOwner = servico.getUsuario().getEmail().equalsIgnoreCase(authentication.getName());
 
-        repository.delete(servico);
+        if (!isAdmin && !isOwner) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Você não tem permissão para " + acao + " este serviço."
+            );
+        }
     }
 }

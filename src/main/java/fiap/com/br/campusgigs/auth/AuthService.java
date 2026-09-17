@@ -16,15 +16,15 @@ public class AuthService implements UserDetailsService {
     private final UsuarioRepository usuarioRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
-        var user = usuarioRepository.findByNome(nome).orElseThrow(
-                () ->    new UsernameNotFoundException("User not found with name: " + nome)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        var user = usuarioRepository.findByEmailIgnoreCase(email).orElseThrow(
+                () ->    new UsernameNotFoundException("User not found with name: " + email)
         );
 
         return User
-                .withUsername(user.getNome())
+                .withUsername(user.getEmail())
                 .password(user.getSenha())
-                .roles(user.getRole())
+                .roles(user.getRole().name())
                 .build();
     }
 }

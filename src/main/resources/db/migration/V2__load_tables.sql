@@ -1,18 +1,18 @@
 -- Usuario (Inserts)
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Enzo Okuizumi', '123456', 'enzo@email.com', '01001-000', 'São Paulo', 'SP', 'USER');
+VALUES ('Enzo Okuizumi', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'enzo@email.com', '01001-000', 'São Paulo', 'SP', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Ana Souza', '123456', 'ana@email.com', '20040-000', 'Rio de Janeiro', 'RJ', 'USER');
+VALUES ('Ana Souza', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'ana@email.com', '20040-000', 'Rio de Janeiro', 'RJ', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Carlos Silva', '123456', 'carlos@email.com', '30110-010', 'Belo Horizonte', 'MG', 'USER');
+VALUES ('Carlos Silva', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'carlos@email.com', '30110-010', 'Belo Horizonte', 'MG', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Mariana Costa', '123456', 'mariana@email.com', '80010-000', 'Curitiba', 'PR', 'USER');
+VALUES ('Mariana Costa', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'mariana@email.com', '80010-000', 'Curitiba', 'PR', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Joao Santos', '123456', 'joao@email.com', '70040-010', 'Brasília', 'DF', 'USER');
+VALUES ('Joao Santos', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'joao@email.com', '70040-010', 'Brasília', 'DF', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Fernanda Lima', '123456', 'fernanda@email.com', '40026-010', 'Salvador', 'BA', 'USER');
+VALUES ('Fernanda Lima', '$2a$10$E8vNh3iGyZliYY.aJo1WhOkCIYfX.CdWqKh/lg0ht9iBM/LFopJfS', 'fernanda@email.com', '40026-010', 'Salvador', 'BA', 'USER');
 INSERT INTO usuario (nome, senha, email, cep, cidade, uf, role)
-VALUES ('Administrador', 'admin123', 'admin@campusgigs.com', '01310-100', 'São Paulo', 'SP', 'ADMIN');
+VALUES ('Administrador', '$2a$10$LWVFOXmGKUjwyh3.oAV1gO6N/H0qIr.1KWYCLC0qpb6sAJA4ZKDv2', 'admin@campusgigs.com', '01310-100', 'São Paulo', 'SP', 'ADMIN');
 
 -- Servico (Inserts)
 INSERT INTO servico (titulo, descricao, categoria, preco, usuario_id, situacao)

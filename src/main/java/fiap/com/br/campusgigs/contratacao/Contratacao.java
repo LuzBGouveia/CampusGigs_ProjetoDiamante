@@ -15,15 +15,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Contratacao {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "servico", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "servico_id", unique = true, nullable = false)
     private Servico servico;
 
-    @OneToOne(mappedBy = "servico", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
-    private Situacao situacao;
+    private SituacaoContratacao situacao;
+
+    public Contratacao(Servico servico, Usuario usuario) {
+        this.servico = servico;
+        this.usuario = usuario;
+        this.situacao = SituacaoContratacao.SOLICITADA;
+    }
 }
