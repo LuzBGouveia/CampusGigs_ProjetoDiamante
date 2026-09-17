@@ -211,3 +211,19 @@ Authorization: Bearer {{tokenAdmin}}
 ### ------------------------------------------------------------------------------
 DELETE {{baseUrl}}/servico/8
 Authorization: Bearer {{tokenAdmin}}
+
+### ------------------------------------------------------------------------------
+### 16. TESTE DE VALIDAÇÃO GLOBAL DE ENUM / JSON INVÁLIDO (CP5 - Slide 10)
+### Envio de valor de enum inválido disparando HttpMessageNotReadableException -> 400 Bad Request
+### ------------------------------------------------------------------------------
+POST {{baseUrl}}/usuario
+Content-Type: application/json
+
+{
+  "nome": "Enum Invalido Teste",
+  "email": "enum.invalido@email.com",
+  "senha": "senhaSegura123",
+  "role": "SUPER_ADMIN",
+  "cep": "01310-100"
+}
+

@@ -39,7 +39,7 @@ public class ContratacaoService {
 
         validator.validate(servico, usuarioLogado);
 
-        var contratacao = new Contratacao(servico, usuarioLogado);
+        var contratacao = request.toEntity(servico, usuarioLogado);
         return ContratacaoResponse.fromEntity(repository.save(contratacao));
     }
 

@@ -28,11 +28,6 @@ public class Contratacao {
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
-    private SituacaoContratacao situacao;
-
-    public Contratacao(Servico servico, Usuario usuario) {
-        this.servico = servico;
-        this.usuario = usuario;
-        this.situacao = SituacaoContratacao.SOLICITADA;
-    }
+    @Builder.Default
+    private SituacaoContratacao situacao = SituacaoContratacao.SOLICITADA;
 }
