@@ -2,8 +2,6 @@ package fiap.com.br.campusgigs.contratacao;
 
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoRequest;
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoResponse;
-import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
-import fiap.com.br.campusgigs.servico.dto.ServicoResponse;
 import fiap.com.br.campusgigs.validations.ContratacaoValidator;
 import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.ServicoRepository;
@@ -45,19 +43,38 @@ public class ContratacaoService {
         return ContratacaoResponse.fromEntity(repository.save(contratacao));
     }
 
-    public ContratacaoResponse update(ContratacaoRequest request, Authentication authentication) {
+    public ContratacaoResponse update(Long id, ContratacaoRequest request, Authentication authentication) {
+        var contratacaoExistente = findContratacaoById(id);
+        validarPermissao(contratacaoExistente, authentication, "editar");
+
         var servico = findServicoById(request.servicoId());
-        var usuarioLogado = findUsuarioByEmail(authentication.getName());
+        if (!contratacaoExistente.getServico().getId().equals(servico.getId())) {
+            validator.validate(servico, contratacaoExistente.getUsuario());
+        }
 
-        validator.validate(servico, usuarioLogado);
-
-        var contratacao = request.toEntity(servico, usuarioLogado);
-        return ContratacaoResponse.fromEntity(repository.save(contratacao));
+        contratacaoExistente.setServico(servico);
+        return ContratacaoResponse.fromEntity(repository.save(contratacaoExistente));
     }
 
-    public void delete(Long id) {
+    public void delete(Long id, Authentication authentication) {
         var contratacao = findContratacaoById(id);
+        validarPermissao(contratacao, authentication, "excluir");
         repository.delete(contratacao);
+    }
+
+    private void validarPermissao(Contratacao contratacao, Authentication authentication, String acao) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isContratante = contratacao.getUsuario().getEmail().equalsIgnoreCase(authentication.getName());
+        boolean isPrestador = contratacao.getServico().getUsuario().getEmail().equalsIgnoreCase(authentication.getName());
+
+        if (!isAdmin && !isContratante && !isPrestador) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Você não tem permissão para " + acao + " esta contratação."
+            );
+        }
     }
 
     private Contratacao findContratacaoById(Long id) {

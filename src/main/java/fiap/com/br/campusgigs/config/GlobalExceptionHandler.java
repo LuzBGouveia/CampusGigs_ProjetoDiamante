@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -121,6 +123,30 @@ public class GlobalExceptionHandler {
         );
         problemDetail.setTitle("Não Autorizado");
         problemDetail.setType(URI.create("https://campusgigs.fiap.com.br/errors/unauthorized"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ProblemDetail handleNoResourceFound(NoResourceFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                "Recurso não encontrado: " + ex.getResourcePath()
+        );
+        problemDetail.setTitle("Não Encontrado");
+        problemDetail.setType(URI.create("https://campusgigs.fiap.com.br/errors/not-found"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ProblemDetail handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                ex.getMessage()
+        );
+        problemDetail.setTitle("Método Não Permitido");
+        problemDetail.setType(URI.create("https://campusgigs.fiap.com.br/errors/method-not-allowed"));
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }

@@ -13,12 +13,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/campusgigs/contratacao")
+@RequestMapping({"/contratacao", "/campusgigs/contratacao"})
 public class ContratacaoController {
     private final ContratacaoService service;
 
     @GetMapping
-    public List<ContratacaoResponse> findAll() {
+    public List<ContratacaoResponse>  findAll() {
         return service.findAll();
     }
 
@@ -33,14 +33,14 @@ public class ContratacaoController {
         return service.save(request, authentication);
     }
 
-    @PutMapping
-    public ContratacaoResponse update(@RequestBody ContratacaoRequest request, Authentication authentication) {
-        return service.update(request, authentication);
+    @PutMapping("/{id}")
+    public ContratacaoResponse update(@PathVariable Long id, @RequestBody @Valid ContratacaoRequest request, Authentication authentication) {
+        return service.update(id, request, authentication);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public void delete(@PathVariable Long id, Authentication authentication) {
+        service.delete(id, authentication);
     }
 }

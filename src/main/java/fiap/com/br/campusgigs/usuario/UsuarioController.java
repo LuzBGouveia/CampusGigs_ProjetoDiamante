@@ -12,7 +12,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/campusgigs/usuario")
+@RequestMapping({"/usuario", "/campusgigs/usuario"})
 public class UsuarioController {
     private final UsuarioService service;
 

@@ -54,6 +54,11 @@ public class UsuarioService {
         );
     }
 
+    public Usuario findUsuarioByEmail(String email) {
+        return repository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario com email " + email + " nao encontrado."));
+    }
+
     private EnderecoResponse fetchEnderecoByCep(String cep) {
         var endereco = enderecoService.getEnderecoPorCep(cep.replaceAll("\\D", ""));
         if (Boolean.TRUE.equals(endereco.erro())) {
