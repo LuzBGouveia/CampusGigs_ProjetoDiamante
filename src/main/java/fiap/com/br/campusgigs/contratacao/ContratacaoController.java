@@ -33,6 +33,11 @@ public class ContratacaoController {
         return service.save(request, authentication);
     }
 
+    @PutMapping
+    public ContratacaoResponse update(@RequestBody ContratacaoRequest request, Authentication authentication) {
+        return service.update(request, authentication);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

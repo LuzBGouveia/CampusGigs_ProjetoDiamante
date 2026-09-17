@@ -2,6 +2,8 @@ package fiap.com.br.campusgigs.contratacao;
 
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoRequest;
 import fiap.com.br.campusgigs.contratacao.dto.ContratacaoResponse;
+import fiap.com.br.campusgigs.servico.dto.ServicoRequest;
+import fiap.com.br.campusgigs.servico.dto.ServicoResponse;
 import fiap.com.br.campusgigs.validations.ContratacaoValidator;
 import fiap.com.br.campusgigs.servico.Servico;
 import fiap.com.br.campusgigs.servico.ServicoRepository;
@@ -34,6 +36,16 @@ public class ContratacaoService {
     }
 
     public ContratacaoResponse save(ContratacaoRequest request, Authentication authentication) {
+        var servico = findServicoById(request.servicoId());
+        var usuarioLogado = findUsuarioByEmail(authentication.getName());
+
+        validator.validate(servico, usuarioLogado);
+
+        var contratacao = request.toEntity(servico, usuarioLogado);
+        return ContratacaoResponse.fromEntity(repository.save(contratacao));
+    }
+
+    public ContratacaoResponse update(ContratacaoRequest request, Authentication authentication) {
         var servico = findServicoById(request.servicoId());
         var usuarioLogado = findUsuarioByEmail(authentication.getName());
 

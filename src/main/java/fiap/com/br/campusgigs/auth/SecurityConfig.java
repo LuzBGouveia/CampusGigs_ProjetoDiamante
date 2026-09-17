@@ -39,12 +39,12 @@ public class SecurityConfig {
     SecurityFilterChain config(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login", "/usuario").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/servico", "/servico/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/servico", "/contratacao").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/servico/**", "/usuario/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/servico/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/servico/**", "/contratacao/**", "/usuario/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/login", "/campusgigs/usuario").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/campusgigs/servico", "/campusgigs/servico/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/campusgigs/servico", "/campusgigs/contratacao").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/campusgigs/servico/**", "/campusgigs/usuario/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/campusgigs/servico/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/campusgigs/servico/**", "/campusgigs/contratacao/**", "/campusgigs/usuario/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/", "/index.html", "/style.css", "/app.js", "/favicon.ico", "/static/**").permitAll()
                         .anyRequest().authenticated()
                 )

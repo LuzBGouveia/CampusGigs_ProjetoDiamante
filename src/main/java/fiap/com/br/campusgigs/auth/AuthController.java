@@ -16,7 +16,7 @@ public class AuthController {
     record LoginRequest(String email, String senha) {}
     record LoginResponse(String token) {}
 
-    @PostMapping("/login")
+    @PostMapping("/campusgigs/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
         var authentication = authenticationManager.authenticate(authenticationToken);
