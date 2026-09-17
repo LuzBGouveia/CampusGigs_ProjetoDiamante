@@ -94,10 +94,11 @@ Abaixo estão descritos os 5 checkpoints avaliativos exigidos no projeto, mapead
 
 ### 5️⃣ CP5 — Integração com Serviço Externo e Revisão Final
 * **Commits Reais**:
-  * [`39bb5d4`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/39bb5d4) — `feat: Só colocando campugigs nos endpoints para ficar mais bonito!! É isso` (*Enzo Okuizumi*)
+  * [`e340a90`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/e340a90) — `feat: ARRUMANDO ESSA BOMBA QUE CHAMAMOS DE PROJETO!! Aliás, colocamos coisas no readme!!!` (*Enzo Okuizumi*)
   * [`3611480`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/3611480) — `feat: Adicionando update em Contratacao` (*Enzo Okuizumi*)
+  * [`39bb5d4`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/39bb5d4) — `feat: Só colocando campugigs nos endpoints para ficar mais bonito!! É isso` (*Enzo Okuizumi*)
 * **Decisão & Justificativa Técnica**:
-  > *"Utilizamos a interface declarativa `@HttpExchange` do Spring Boot para consumir a API pública do ViaCEP sem acoplamento de bibliotecas externas, padronizamos as rotas com prefixo `/campusgigs` e centralizamos todos os erros e violações de regras no `GlobalExceptionHandler` sob a RFC 7807 (`ProblemDetail`), documentando todas as evidências de teste manual no Insomnia."*
+  > *"Utilizamos a interface declarativa `@HttpExchange` do Spring Boot para consumir a API pública do ViaCEP sem acoplamento de bibliotecas externas, padronizamos as rotas com prefixo `/campusgigs` e centralizamos todos os erros e violações de regras no `GlobalExceptionHandler` sob a RFC 7807 (`ProblemDetail`), documentando todas as evidências de teste manual no Insomnia e ajustando a documentação final."*
 
 ---
 
@@ -371,4 +372,5 @@ Todas as falhas da aplicação são interceptadas pelo `GlobalExceptionHandler` 
 | **CP4** | [`b9851f6`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/b9851f6) | Lucas Gouveia | `feat: CP4 - Regras de autorização por role corrigidas.` | Refinamento das permissões de USER/ADMIN e tratamento de autorização. |
 | **CP5** | [`39bb5d4`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/39bb5d4) | Enzo Okuizumi | `feat: Só colocando campugigs nos endpoints para ficar mais bonito!! É isso` | Padronização das rotas com prefixo `/campusgigs` e suporte raiz. |
 | **CP5** | [`3611480`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/3611480) | Enzo Okuizumi | `feat: Adicionando update em Contratacao` | Implementação do fluxo de atualização em contratações com regras de domínio. |
+| **CP5** | [`e340a90`](https://github.com/LuzBGouveia/CampusGigs_ProjetoDiamante/commit/e340a90) | Enzo Okuizumi | `feat: ARRUMANDO ESSA BOMBA QUE CHAMAMOS DE PROJETO!! Aliás, colocamos coisas no readme!!!` | Revisão final, inclusão das evidências e tratamento RFC 7807 no ExceptionHandler. |
 
